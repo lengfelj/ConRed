@@ -11,20 +11,38 @@ library(ggplot2)
 
 Read the data from the CSV output from ConEd.
 ```{r}
-elec_data <- read.csv("~/Downloads/cned_electric_interval_data_Service 1_2017-12-21_to_2018-10-27.csv")
+df <- read.csv("~/Downloads/cned_electric_interval_data_Service 1_2017-12-21_to_2018-10-27.csv")
 
 
 ```
 
 Combine the date and time columns into one datetime column
 ```{r}
-elec_data <- mutate(elec_data, reading_datetime=as.POSIXct(paste(elec_data$DATE, elec_data$START.TIME), format="%Y-%m-%d %H:%M"))
+df <- mutate(df, reading_datetime=as.POSIXct(paste(df$DATE, df$START.TIME), format="%Y-%m-%d %H:%M"))
 
 ```
 
-Plot the Data
+### Add a few more columns that will be useful for plotting
+
 ```{r}
-ggplot(data = elec_data, aes(x = reading_datetime, y = USAGE))+
+
+df <- mutate(df, month=format(as.Date(df$DATE), "%m"))
+
+```
+
+
+
+### Simple line chart of usage over time
+```{r}
+ggplot(data = df, aes(x = reading_datetime, y = USAGE))+
   geom_line(color = "#00AFBB", size = 1)
 ```
+
+### Scatterplot by day. 
+I've set the alpha to .1 to do with the overlapping points
+
+```{r}
+ggplot(data=df, aes(x=DATE, y=USAGE)) + geom_point(alpha=0.1)
+```
+
 
