@@ -1,0 +1,30 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+
+
+Read the data from the CSV output from ConEd.
+```{r}
+elec_data <- read.csv("~/Downloads/cned_electric_interval_data_Service 1_2017-12-21_to_2018-10-27.csv")
+
+
+```
+
+Combine the date and time columns into one datetime column
+```{r}
+elec_data <- mutate(elec_data, reading_datetime=as.POSIXct(paste(elec_data$DATE, elec_data$START.TIME), format="%Y-%m-%d %H:%M"))
+
+```
+
+Plot the Data
+```{r}
+ggplot(data = elec_data, aes(x = reading_datetime, y = USAGE))+
+  geom_line(color = "#00AFBB", size = 1)
+```
+
